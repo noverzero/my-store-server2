@@ -10,6 +10,8 @@ const app = express()
 //MIDDLEWARE
 app.use(cors())
 app.use(morgan('dev'))
+const db = require("./models")
+const Category = db.Category
 
 //ROUTER FILES
 
@@ -21,6 +23,17 @@ app.get('/api/test', (req, res, next) => {
   })
 })
 
+app.get('/api/categories', (req, res, next) => {
+  Category.findAll()
+  .then((categories) => {
+    res.json({
+      categories: categories
+    })
+  })
+  .catch(error => {
+    next(error)
+  })
+})
 // ERROR HANDLING
 
 // The following 2 `app.use`'s MUST follow ALL your routes/middleware
