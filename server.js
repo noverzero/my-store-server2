@@ -37,6 +37,20 @@ app.get('/api/categories', (req, res, next) => {
     next(error)
   })
 })
+
+app.get('/api/products', (req, res, next) => {
+  Product.findAll({
+    include: [{ model: Category }],
+  })
+  .then(products => {
+    res.json({
+    products
+    })
+  })
+  .catch(error => {
+    next(error)
+  })
+})
 // ERROR HANDLING
 
 // The following 2 `app.use`'s MUST follow ALL your routes/middleware
@@ -47,7 +61,6 @@ function notFound(req, res, next) {
   res.status(404).send({error: 'Not found!', status: 404, url: req.originalUrl})
 }
 
-// eslint-disable-next-line
 function errorHandler(err, req, res, next) {
   console.error('ERROR', err)
   const stack =  process.env.NODE_ENV !== 'production' ? err.stack : undefined
